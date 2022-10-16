@@ -75,14 +75,8 @@
     @foreach (XSS.Models.Competition record in records)
     {
         <tr>
-            @if (record.BrandName is null)
-            {
-            <p>nothing here</p>
-            }
-            else
-            {
+
             <td>@record.BrandName</td>
-            }
         </tr>
 
     }

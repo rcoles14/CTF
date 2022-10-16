@@ -4,4 +4,3 @@
 // Write your JavaScript code.
 
 document.cookie = "flag=byu22ind{c00ki3s}";
-var flag = "byu22ind{th@tw@se@sy}";
