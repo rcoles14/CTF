@@ -1,0 +1,90 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@using System.Data.SQLite
+
+@model XSS.Models.SearchQuery
+@{
+    ViewData["Title"] = "Search my database";
+
+    string connString = "Data Source= Brands.sqlite;";
+    SQLiteConnection conn = new SQLiteConnection(connString);
+    try
+    {
+        conn.Open();
+    }
+    catch
+    {
+        Console.WriteLine("Problem connecting to database file.");
+    }
+
+    SQLiteCommand cmd = conn.CreateCommand();
+    string queryString = "";
+    queryString = Model.Brand;
+    cmd.CommandText = "SELECT BrandName FROM Competition WHERE BrandName LIKE '%" + queryString + "%'";
+
+    List<XSS.Models.Competition> records = new List<XSS.Models.Competition>();
+
+
+
+    try
+    {
+        SQLiteDataReader sqlDR = cmd.ExecuteReader();
+
+
+
+
+        while (sqlDR.Read())
+        {
+
+            XSS.Models.Competition record = new XSS.Models.Competition();
+            record.BrandName = sqlDR.GetString(0);
+            records.Add(record);
+        }
+
+    }
+    catch
+    {
+
+    }
+
+    conn.Close();
+}
+<h1>Search for a brand!</h1>
+<form asp-controller="Home" , asp-action="Search" method="post">
+    <label>Filter By Name:</label>
+    <input asp-for="Brand" />
+    <input type="hidden" value="byu22ind{h1d1ng1npla1ns1ght}" />
+    <button type="submit">Submit</button>
+</form>
+<hr />
+@if (!(Model.Brand is null))
+{
+    <div>Search for <strong>@Html.Raw(Model.Brand)</strong></div>
+}
+<br />
+<br />
+
+
+
+<table style="border: solid 1px black">
+    <tr>
+        <th>Brand Name</th>
+
+    </tr>
+    @foreach (XSS.Models.Competition record in records)
+    {
+        <tr>
+            @if (record.BrandName is null)
+            {
+            <p>nothing here</p>
+            }
+            else
+            {
+            <td>@record.BrandName</td>
+            }
+        </tr>
+
+    }
+
+</table>
